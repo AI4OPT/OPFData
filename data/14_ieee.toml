@@ -1,0 +1,42 @@
+# Name of the reference PGLib case. Must be a valid PGLib case name.
+ref = "14_ieee"
+# Directory where instance/solution files are exported
+# must be a valid directory
+export_dir = "data/14_ieee"
+
+[sampler]
+# Sampler options
+[sampler.load]
+noise_type = "ScaledLogNormal"  # Only "ScaledLogNormal" is supported at the moment
+l          = 0.8                # Lower bound of base load factor
+u          = 1.20               # Upper bound of base load factor
+sigma      = 0.15               # Relative (multiplicative) noise level.
+
+
+[OPF]
+# OPF formulations to solve for each sample
+[OPF.DCOPF]
+# Formulation/solver options
+type = "DCPPowerModel"
+solver.name = "Mosek"
+
+[OPF.ACOPF]
+type = "ACPPowerModel"
+solver.name = "Ipopt"
+solver.attributes.tol = 1e-6
+
+[OPF.SOCWRConic]
+type = "SOCWRConicPowerModel"
+solver.name = "Mosek"
+# Loosened tolerances improve Mosek's convergence
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_PFEAS = 1e-6
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_DFEAS = 1e-6
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_MU_RED = 1e-6
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-6
+
+[slurm]
+# SLURM options
+n_samples = 20000
+n_jobs = 45
+queue = "embers"
+charge_account = "gts-phentenryck3-ai4opt"
