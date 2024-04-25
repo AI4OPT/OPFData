@@ -1,0 +1,29 @@
+ref = "5_pjm"
+export_dir = "/Users/mklamkin3/Git/AI4OPT/OPFData/data"
+
+[sampler]
+[sampler.load]
+noise_type = "ScaledLogNormal"  # Only "ScaledLogNormal" is supported at the moment
+l          = 0.8                # Lower bound of base load factor
+u          = 1.20               # Upper bound of base load factor
+sigma      = 0.15               # Relative (multiplicative) noise level.
+
+
+[OPF]
+[OPF.DCOPF]
+type = "DCPPowerModel"
+solver.name = "Mosek"
+
+[OPF.ACOPF]
+type = "ACPPowerModel"
+solver.name = "Ipopt"
+solver.attributes.tol = 1e-6
+
+[OPF.SOCWRConic]
+type = "SOCWRConicPowerModel"
+solver.name = "Mosek"
+# Loosened tolerances improve Mosek's convergence
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_PFEAS = 1e-6
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_DFEAS = 1e-6
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_MU_RED = 1e-6
+solver.attributes.MSK_DPAR_INTPNT_CO_TOL_REL_GAP = 1e-6
